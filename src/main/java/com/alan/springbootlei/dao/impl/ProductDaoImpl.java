@@ -7,6 +7,7 @@ import com.alan.springbootlei.rowmapper.ProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -48,7 +49,7 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String, Object> map = new HashMap<>();
         map.put("productName", productRequest.getProductName());
-//        ProductCategory型別須轉為String才可存入資料庫
+        // ProductCategory 型別必須轉換為 String 才可成功存入資料庫中
         map.put("category", productRequest.getCategory().toString());
         map.put("imageUrl", productRequest.getImageUrl());
         map.put("price", productRequest.getPrice());
@@ -60,11 +61,32 @@ public class ProductDaoImpl implements ProductDao {
         map.put("lastModifiedDate", now);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
+        // 若要使用 KeyHolder，則 update 方法中必須使用 SqlParameterSource
         namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
 
         int productId = keyHolder.getKey().intValue();
 
         return productId;
+    }
+
+    @Override
+    public void updateProduct(Integer productId, ProductRequest productRequest) {
+        String sql = "UPDATE product SET product_name = :productName, category = :category, image_url = :imageUrl, " +
+                "price = :price, stock = :stock, description = :description, last_modified_date = :lastModifiedDate " +
+                "WHERE product_id = :productId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+
+        map.put("productName", productRequest.getProductName());
+        map.put("category",productRequest.getCategory().toString());
+        map.put("imageUrl", productRequest.getImageUrl());
+        map.put("price", productRequest.getPrice());
+        map.put("stock", productRequest.getStock());
+        map.put("description", productRequest.getDescription());
+        // 更新修改時間，建立時間不變
+        map.put("lastModifiedDate", new Date());
+
+        namedParameterJdbcTemplate.update(sql, map);
     }
 }
