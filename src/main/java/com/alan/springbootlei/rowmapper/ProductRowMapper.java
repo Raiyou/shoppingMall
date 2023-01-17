@@ -1,5 +1,6 @@
 package com.alan.springbootlei.rowmapper;
 
+import com.alan.springbootlei.constant.ProductCategory;
 import com.alan.springbootlei.model.Product;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -13,7 +14,13 @@ public class ProductRowMapper implements RowMapper<Product> {
         Product product = new Product();
         product.setProductId(resultSet.getInt("product_id"));
         product.setProductName(resultSet.getString("product_name"));
-        product.setCategory(resultSet.getString("category"));
+
+        String categoryStr = resultSet.getString("category");
+        ProductCategory category = ProductCategory.valueOf(categoryStr);
+        product.setCategory(category);
+//        等同於
+//        product.setCategory(ProductCategory.valueOf(resultSet.getString("category")));
+
         product.setImageUrl(resultSet.getString("image_url"));
         product.setPrice(resultSet.getInt("price"));
         product.setStock(resultSet.getInt("stock"));
