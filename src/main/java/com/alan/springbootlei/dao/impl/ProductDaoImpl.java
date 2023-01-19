@@ -1,5 +1,6 @@
 package com.alan.springbootlei.dao.impl;
 
+import com.alan.springbootlei.constant.ProductCategory;
 import com.alan.springbootlei.dao.ProductDao;
 import com.alan.springbootlei.dto.ProductRequest;
 import com.alan.springbootlei.model.Product;
@@ -24,11 +25,22 @@ public class ProductDaoImpl implements ProductDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> getProducts() {
+    public List<Product> getProducts(ProductCategory category, String search) {
         String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, " +
-                "created_date, last_modified_date FROM product";
+                "created_date, last_modified_date FROM product WHERE 1=1";
 
         Map<String, Object> map = new HashMap<>();
+
+        if (category != null) {
+            sql = sql + " AND category = :category";
+            // ProductCategory 型別必須轉換為 String 以正確對應到資料庫中的 category 型別
+            map.put("category", category.name());
+        }
+
+        if (search !=null) {
+            sql = sql + " AND product_name LIKE :search";
+            map.put("search", "%" + search + "%");
+        }
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
@@ -61,7 +73,7 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String, Object> map = new HashMap<>();
         map.put("productName", productRequest.getProductName());
-        // ProductCategory 型別必須轉換為 String 才可成功存入資料庫中
+        // ProductCategory 型別必須轉換為 String 以正確對應到資料庫中的 category 型別
         map.put("category", productRequest.getCategory().toString());
         map.put("imageUrl", productRequest.getImageUrl());
         map.put("price", productRequest.getPrice());
