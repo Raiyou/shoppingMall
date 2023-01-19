@@ -1,6 +1,7 @@
 package com.alan.springbootlei.controller;
 
 import com.alan.springbootlei.constant.ProductCategory;
+import com.alan.springbootlei.dto.ProductQueryParams;
 import com.alan.springbootlei.dto.ProductRequest;
 import com.alan.springbootlei.model.Product;
 import com.alan.springbootlei.service.ProductService;
@@ -23,7 +24,11 @@ public class ProductController {
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search
     ) {
-        List<Product> productsList = productService.getProducts(category, search);
+        ProductQueryParams productQueryParams = new ProductQueryParams();
+        productQueryParams.setCategory(category);
+        productQueryParams.setSearch(search);
+
+        List<Product> productsList = productService.getProducts(productQueryParams);
 
         return ResponseEntity.status(HttpStatus.OK).body(productsList);
     }
