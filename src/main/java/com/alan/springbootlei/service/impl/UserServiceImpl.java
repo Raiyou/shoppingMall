@@ -1,6 +1,7 @@
 package com.alan.springbootlei.service.impl;
 
 import com.alan.springbootlei.dao.UserDao;
+import com.alan.springbootlei.dto.UserLoginRequest;
 import com.alan.springbootlei.dto.UserRegisterRequest;
 import com.alan.springbootlei.model.User;
 import com.alan.springbootlei.service.UserService;
@@ -18,10 +19,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
-    @Override
-    public User getUserById(Integer userId) {
-        return userDao.getUserById(userId);
-    }
 
     @Override
     public Integer register(UserRegisterRequest userRegisterRequest) {
@@ -37,4 +34,25 @@ public class UserServiceImpl implements UserService {
         return userDao.createUser(userRegisterRequest);
     }
 
+    @Override
+    public User getUserById(Integer userId) {
+        return userDao.getUserById(userId);
+    }
+
+    @Override
+    public User login(UserLoginRequest userLoginRequest) {
+        User user = userDao.getUserByEmail(userLoginRequest.getEmail());
+
+        if (user == null) {
+            log.warn("該 email {} 尚未註冊", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        if (user.getPassword().equals(userLoginRequest.getPassword())) {
+            return user;
+        } else {
+            log.warn("email {} 的密碼不正確", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
