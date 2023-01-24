@@ -1,4 +1,4 @@
-package com.kujudy.springbootmall.controller;
+package com.alan.springbootlei.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.alan.springbootlei.constant.ProductCategory;
