@@ -4,6 +4,7 @@ import com.alan.springbootlei.dao.OrderDao;
 import com.alan.springbootlei.dao.ProductDao;
 import com.alan.springbootlei.dto.BuyItem;
 import com.alan.springbootlei.dto.CreateOrderRequest;
+import com.alan.springbootlei.model.Order;
 import com.alan.springbootlei.model.OrderItem;
 import com.alan.springbootlei.model.Product;
 import com.alan.springbootlei.service.OrderService;
@@ -22,6 +23,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductDao productDao;
+
+    @Override
+    public Order getOrderById(Integer orderId) {
+        Order order = orderDao.getOrderById(orderId);
+
+        List<OrderItem> orderItemList = orderDao.getOrderItemsByOrderId(orderId);
+
+        order.setOrderItemList(orderItemList);
+
+        return order;
+    }
 
     // 存取多個資料庫時務必加上 Transactional，當兩個資料庫操作未同時成功時，使已變更的部分回滾
     @Transactional
