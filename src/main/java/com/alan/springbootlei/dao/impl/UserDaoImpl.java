@@ -56,7 +56,7 @@ public class UserDaoImpl implements UserDao {
 
         namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
 
-        Integer userId = keyHolder.getKey().intValue();
+        int userId = keyHolder.getKey().intValue();
 
         return userId;
     }
