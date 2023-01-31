@@ -34,4 +34,9 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }
