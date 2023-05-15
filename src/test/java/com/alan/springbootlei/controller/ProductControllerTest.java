@@ -32,13 +32,13 @@ public class ProductControllerTest {
     @Test
     public void getProduct_success() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/products/{productId}", 4);
+                .get("/products/{productId}", 5);
 
         mockMvc.perform(requestBuilder)
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productName", equalTo("蘋果（澳洲）")))
-                .andExpect(jsonPath("$.category", equalTo("FOOD")))
+                .andExpect(jsonPath("$.productName", equalTo("BMW")))
+                .andExpect(jsonPath("$.category", equalTo("CAR")))
                 .andExpect(jsonPath("$.imageUrl", notNullValue()))
                 .andExpect(jsonPath("$.price", notNullValue()))
                 .andExpect(jsonPath("$.stock", notNullValue()))
