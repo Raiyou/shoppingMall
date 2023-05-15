@@ -1,8 +1,8 @@
 # 僅供 API Test
 
-以電商網站為範例的純後端架設練習
+以電商網站為範例的純後端架設練習，資料庫已放在 Azure
 
-`https://shoppingmall-server.azurewebsites.net/`
+`http://localhost:8080/`
 
 ## API 文件
 ___
